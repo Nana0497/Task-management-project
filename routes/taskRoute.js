@@ -42,22 +42,26 @@ router.get('/', auth, async (req, res) => {
       res.status(400).send({ error: err.message });
     }
 });
-//fetch a task by id
+// Fetch a task by ID
 router.get('/:id', auth, async (req, res) => {
     const taskid = req.params.id;
     try {
-      const tasks = await Task.findOne({
+      const task = await Task.findOne({
         _id: taskid,
-         owner: req.user._id });
-         if(!task){
-            res.status(201).json({message: "Task not found" });
-         }
-      res.status(201).json({ task, message: "Task fetched successfully" });
+        owner: req.user._id
+      });
+  
+      if (!task) {
+        return res.status(404).json({ message: "Task not found" });
+      }
+  
+      res.status(200).json({ task, message: "Task fetched successfully" });
     } 
     catch (err) {
       res.status(400).send({ error: err.message });
     }
-});
+  });
+  
 //update a task by id
 router.patch('/:id', auth, async (req, res) => {
         const taskid = req.params.id;
